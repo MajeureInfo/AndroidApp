@@ -28,6 +28,22 @@ public class ContextManagementActivity extends AppCompatActivity {
                 retrieveRoomContextState(room);
             }
         });
+
+        //Switch Light
+        ((Button) findViewById(R.id.button1)).setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                System.out.println("SwitchLight");
+                switchLight(room);
+            }
+        });
+
+        //Switch Ringer
+        ((Button) findViewById(R.id.button2)).setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                System.out.println("SwitchRinger");
+                switchRinger(room);
+            }
+        });
     }
 
     protected void onUpdate(RoomContextState context){
@@ -44,12 +60,16 @@ public class ContextManagementActivity extends AppCompatActivity {
             ((TextView) findViewById(R.id.textViewNoiseValue)).setText(Float
                     .toString(state.getNoiseLevel()));
             ImageView image = (ImageView)findViewById(R.id.imageView1);
+            ImageView image_ringer = (ImageView)findViewById(R.id.imageView2);
             System.out.println(state.getLightStatus());
             if (state.getLightStatus().equals("ON")) {
-                System.out.println("on  ");
                 image.setImageResource(R.drawable.ic_bulb_on);
             }else
                 image.setImageResource(R.drawable.ic_bulb_off);
+            if (state.getRingerStatus().equals("ON")) {
+                image_ringer.setImageResource(R.drawable.ic_ringer_on);
+            }else
+                image_ringer.setImageResource(R.drawable.ic_ringer_off);
         //} else {
         //    initView();
         //}
@@ -57,6 +77,14 @@ public class ContextManagementActivity extends AppCompatActivity {
 
     protected void retrieveRoomContextState(String room){
         RoomContextHttpManager.retrieveRoomContextState(room, this, this.getApplicationContext());
+    }
+
+    protected void switchLight(String room){
+        RoomContextHttpManager.switchLight(room, this, this.getApplicationContext());
+    }
+
+    protected void switchRinger(String room){
+        RoomContextHttpManager.switchRinger(room, this, this.getApplicationContext());
     }
 
 }
