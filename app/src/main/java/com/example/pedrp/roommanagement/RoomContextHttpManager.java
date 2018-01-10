@@ -194,5 +194,4 @@ public class RoomContextHttpManager {
         queue.add(contextRequest);
 
     }
-
 }

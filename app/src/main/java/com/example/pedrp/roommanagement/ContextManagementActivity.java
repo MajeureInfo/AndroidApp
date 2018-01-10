@@ -76,7 +76,6 @@ public class ContextManagementActivity extends AppCompatActivity {
                 }
             }
         });
-
     }
 
     protected void onUpdate(RoomContextState context){
