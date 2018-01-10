@@ -34,12 +34,7 @@ public class ContextManagementActivity extends AppCompatActivity {
     private RoomContextState state;
     MqttHelper mqttHelper;
     MqttSubscriber mqttSubscriber;
-    /*
-    MemoryPersistence memPer = new MemoryPersistence();
 
-    final MqttAndroidClient client = new MqttAndroidClient(
-            this, "wss://m23.cloudmqtt.com:34160", "roomPublisher", memPer);
-    */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -64,7 +59,6 @@ public class ContextManagementActivity extends AppCompatActivity {
         //Switch Light
         ((Button) findViewById(R.id.button1)).setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                System.out.println("SwitchLight");
                 if (room != null) {
                     switchLight(room);
                     publish(room, "light");
@@ -76,7 +70,6 @@ public class ContextManagementActivity extends AppCompatActivity {
         //Switch Ringer
         ((Button) findViewById(R.id.button2)).setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                System.out.println("SwitchRinger");
                 if (room != null) {
                     switchRinger(room);
                     publish(room, "ringer");
@@ -92,27 +85,21 @@ public class ContextManagementActivity extends AppCompatActivity {
     }
 
     private void updateContextView() {
-        System.out.println("update");
-        //if (this.state != null) {
-            //contextView.setVisibility(View.VISIBLE);
-            ((TextView) findViewById(R.id.textViewLightValue)).setText(Integer
-                    .toString(state.getLightLevel()));
-            ((TextView) findViewById(R.id.textViewNoiseValue)).setText(Float
-                    .toString(state.getNoiseLevel()));
-            ImageView image = (ImageView)findViewById(R.id.imageView1);
-            ImageView image_ringer = (ImageView)findViewById(R.id.imageView2);
-            System.out.println(state.getLightStatus());
-            if (state.getLightStatus().equals("ON")) {
-                image.setImageResource(R.drawable.ic_bulb_on);
-            }else
-                image.setImageResource(R.drawable.ic_bulb_off);
-            if (state.getRingerStatus().equals("ON")) {
-                image_ringer.setImageResource(R.drawable.ic_ringer_on);
-            }else
-                image_ringer.setImageResource(R.drawable.ic_ringer_off);
-        //} else {
-        //    initView();
-        //}
+        ((TextView) findViewById(R.id.textViewLightValue)).setText(Integer
+                .toString(state.getLightLevel()));
+        ((TextView) findViewById(R.id.textViewNoiseValue)).setText(Float
+                .toString(state.getNoiseLevel()));
+        ImageView image = (ImageView)findViewById(R.id.imageView1);
+        ImageView image_ringer = (ImageView)findViewById(R.id.imageView2);
+        System.out.println(state.getLightStatus());
+        if (state.getLightStatus().equals("ON")) {
+            image.setImageResource(R.drawable.ic_bulb_on);
+        }else
+            image.setImageResource(R.drawable.ic_bulb_off);
+        if (state.getRingerStatus().equals("ON")) {
+            image_ringer.setImageResource(R.drawable.ic_ringer_on);
+        }else
+            image_ringer.setImageResource(R.drawable.ic_ringer_off);
     }
 
     protected void retrieveRoomContextState(String room){
@@ -221,11 +208,10 @@ public class ContextManagementActivity extends AppCompatActivity {
         String sender = message.toString().split(",")[1];
         message = message.toString().split(",")[0];
         System.out.println("[mqtt] " + topic + " : " + message + " from " + sender);
-        //String type = topic.split("/")[2];
         String roomId = topic.split("/")[1];
         System.out.println(roomId);
-        if (message.equals("switch") && (sender.equals("arduinoClient") || sender.equals("webClient")) && room.equals(roomId)) {
-            retrieveRoomContextState(roomId);
+        if ((message.equals("switch") || message.equals("switch-on") || message.equals("switch-off")) && (sender.equals("arduinoClient") || sender.equals("webClient")) && (roomId.equals(room) || roomId.equals("all"))) {
+            retrieveRoomContextState(room);
         }
     }
 }
