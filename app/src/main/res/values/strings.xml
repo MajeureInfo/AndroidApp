@@ -1,10 +1,11 @@
 <resources>
     <string name="app_name">RoomManagement</string>
-    <string name="enter_room">Enter Room</string>
+    <string name="enter_room">Select Room</string>
     <string name="ok">Ok</string>
-    <string name="light">Light</string>
-    <string name="noise">Noise</string>
+    <string name="light">Light </string>
+    <string name="noise">Noise </string>
     <string name="image_content_description">Content</string>
     <string name="lightonoff">Light On/Off</string>
     <string name="ringonoff">Ring On/Off</string>
+    <string name="room">Room #  </string>
 </resources>

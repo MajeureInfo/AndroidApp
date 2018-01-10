@@ -3,6 +3,7 @@ package com.example.pedrp.roommanagement;
 
 import android.content.Context;
 import android.provider.Settings;
+import android.support.annotation.NonNull;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -15,6 +16,12 @@ import com.android.volley.toolbox.Volley;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
+import java.util.ListIterator;
 
 
 public class RoomContextHttpManager {
@@ -149,4 +156,42 @@ public class RoomContextHttpManager {
 
     }
 
+    public static void retrieveRooms(final ContextManagementActivity aCtx, final Context context) {
+        RequestQueue queue = Volley.newRequestQueue(context);
+        String url = url_api;
+        System.out.println(url_api);
+
+        //Switch Ringer
+
+        JsonArrayRequest contextRequest = new JsonArrayRequest
+                (Request.Method.GET, url, null, new Response.Listener<JSONArray>() {
+
+                    @Override
+                    public void onResponse(JSONArray response) {
+                        System.out.println("RESPONSE");
+                        System.out.println(response);
+                        try {
+                            List<String> list = new ArrayList<String>();
+                            for (int i = 0; i < response.length(); i++){
+                                list.add(response.getJSONObject(i).getString("id").toString());
+                                System.out.println("id " + list.get(i));
+                            }
+                            aCtx.fillSpinner(list);
+
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
+                    }
+                }, new Response.ErrorListener() {
+
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        error.printStackTrace(); // Some error to access URL : Room may not exists...
+                    }
+                });
+        queue.add(contextRequest);
+
+    }
 }
